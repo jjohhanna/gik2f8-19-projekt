@@ -11,7 +11,7 @@
 </head>
 
 <body>
-    <main id="root" class="pt-20 pb-40 bg-teal-100 min-h-screen">
+    <main id="root" class="pt-20 pb-40 bg-gradient-to-br from-teal-100 to-pink-300 min-h-screen">
         <h1 class="text-center mb-20 text-7xl text-teal-600">Receptbok</h1>
         <!-- Sektion som gör att formuläret och listan kommer att hamna bredvid varandra. -->
         <section
@@ -35,18 +35,18 @@
                             class="w-full rounded-md px-4 py-2 border-2 border-cyan-500 bg-violet-200 text-teal-700 focus-within:outline-none focus:bg-indigo-600 focus:text-white focus:border-indigo-600" />
                         <!-- border-yellow-500 border-2 -->
                     </section>
-                    <!-- Följande sektioner är likadana för övriga fält i formuläret; description och dueDate -->
+                    <!-- Följande sektioner är likadana för övriga fält i formuläret; allergy och dueDate -->
                     <section class="mb-2">
-                        <label class="block pr-5 mb-2 text-xl text-teal-900" for="description">Beskrivning</label>
+                        <label class="block pr-5 mb-2 text-xl text-teal-900" for="allergy">Allergi</label>
                         <p class="message w-full text-sm text-red-700 mb-2 hidden">
                             Error message
                         </p>
-                        <textarea maxlength="500" rows="5" id="description" name="description"
-                            class="resize-none w-full rounded-md border-2 border-pink-300 focus-within:outline-none bg-yellow-100 text-teal-700 focus:bg-pink-700 focus:text-white focus:border-pink-700 px-4 py-2"></textarea>
+                        <textarea maxlength="100" rows="5" id="allergy" name="allergy"
+                            class="box-border h-20 p-4 border-4  resize-none w-full rounded-md border-2 border-pink-300 focus-within:outline-none bg-yellow-100 text-teal-700 focus:bg-pink-700 focus:text-white focus:border-pink-700 px-4 py-2"></textarea>
                     </section>
                     <!-- Knappen är av typen submit för att den ska vara knuten till formulärets submit-event.  -->
                     <button name="submitReceptForm"
-                        class="rounded-full text-white bg-teal-600 hover:bg-lime-300 hover:text-pink-700 px-4 py-1"
+                        class="float-right rounded-full text-white bg-teal-600 hover:bg-lime-300 hover:text-pink-700 px-4 py-1"
                         type="submit">
                         Spara
                     </button>
