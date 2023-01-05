@@ -12,18 +12,18 @@ Nedan används därför todoForm.[fältnamn] för att sätta eventlyssnare på r
 2. När någon lämnar fältet, dvs. klickar utanför det eller markerar nästa fält. 
 För att fånga tangenttryck kan man exempelvis använda eventtypen "keyup" och för att fånga eventet att någon lämnar fältet använder man eventtypen "blur" */
 
-/* Till alla dessa fält och alla dessa typer av event koppplas en och samma eventlyssnare; validateField. Eventlyssnaren är funktionen validateField och den vill ta emot själva fältet som berörs. Eftersom man inte får sätta parenteser efter en eventlyssnare när man skickar in den, får man baka in den i en anonym arrow-function. Man får alltså inte skriva todoForm.title.addEventListener("keyup", validateField(e.target)), utan man måste använda en omslutande funktion för att skicka e.target som argument. Därför används en anonym arrowfunction med bara en rad - att anropa validateField med det argument som den funktionen vill ha.  */
+/* Till alla dessa fält och alla dessa typer av event koppplas en och samma eventlyssnare; validateField. Eventlyssnaren är funktionen validateField och den vill ta emot själva fältet som berörs. Eftersom man inte får sätta parenteser efter en eventlyssnare när man skickar in den, får man baka in den i en anonym arrow-function. Man får alltså inte skriva todoForm.title.addEventListener("keyup", validateField(event.target)), utan man måste använda en omslutande funktion för att skicka event.target som argument. Därför används en anonym arrowfunction med bara en rad - att anropa validateField med det argument som den funktionen vill ha.  */
 
 /*receptForm namnet på formuläret som kommer från index.  */
-receptForm.title.addEventListener('keyup', (e) => validateField(e.target));
-receptForm.title.addEventListener('blur', (e) => validateField(e.target));
+receptForm.title.addEventListener('keyup', (event) => validateField(event.target));
+receptForm.title.addEventListener('blur', (event) => validateField(event.target));
 /* En annan eventtyp som kan användas för att fånga tangenttryck är "input". De fungerar lite olika, men tillräckligt lika för vårt syfte. Kolla gärna själva upp skillnader.  */
-receptForm.allergy.addEventListener('input', (e) => validateField(e.target));
-receptForm.allergy.addEventListener('blur', (e) => validateField(e.target));
+receptForm.allergy.addEventListener('input', (event) => validateField(event.target));
+receptForm.allergy.addEventListener('blur', (event) => validateField(event.target));
 
 /* I dueDate måste man fånga upp input, då man kan förändra fältet genom att välja datum i en datumväljare, och således aldrig faktiskt skriva i fältet.  */
-// receptForm.dueDate.addEventListener('input', (e) => validateField(e.target));
-// receptForm.dueDate.addEventListener('blur', (e) => validateField(e.target));
+// receptForm.dueDate.addEventListener('input', (event) => validateField(event.target));
+// receptForm.dueDate.addEventListener('blur', (event) => validateField(event.target));
 
 /* Formuläret har eventtypen"submit", som triggas när någon trycker på en knapp av typen "submit". Som denna: 
 <button name="submitTodoForm" class="rounded-md bg-yellow-500 hover:bg-yellow-400 px-4 py-1" type="submit"> */
@@ -48,7 +48,7 @@ Adressen som skickas in är http://localhost:5000/allRecept och innan det funger
 const api = new Api('http://localhost:5000/allRecept');
 
 /* Nedan följer callbackfunktionen som är kopplad till alla formulärets fält, när någon skriver i det eller lämnar det.
-Funktionen tar emot en parameter - field - som den får genom att e.target skickas till funktionen när den kopplas med addEventListener ovan. */
+Funktionen tar emot en parameter - field - som den får genom att eventtarget skickas till funktionen när den kopplas med addEventListener ovan. */
 function validateField(field) {
   /* Destructuring används för att plocka ut endast egenskaperna name och value ur en rad andra egenskaper som field har. Mer om destructuring https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment */
 
@@ -110,8 +110,10 @@ function onSubmit(event) {
   /* Standardbeteendet hos ett formulär är att göra så att webbsidan laddas om när submit-eventet triggas. I denna applikation vill vi fortsätta att köra JavaScript-kod för att behandla formulärets innehåll och om webbsidan skulle ladda om i detta skede skulle det inte gå.   */
 
   /* Då kan man använda eventets metod preventDefault för att förhindra eventets standardbeteende, där submit-eventets standardbeteende är att ladda om webbsidan.  */
-  event.preventDefault();
+  console.log('det funkar att spara');
+  event.preventDefault(); //något fel här. Tar vi bort event.preventDefault(); fungerar nästkommande console.log('sparas'); och  console.log('Submit');. Vad kan vara fel??
   /* Ytterligare en koll görs om alla fält är godkända, ifall man varken skrivit i eller lämnat något fält. */
+  console.log('sparas');
   if (titleValid && allergyValid) {
     /* Log för att se om man kommit förbi valideringen */
     console.log('Submit');
@@ -127,9 +129,7 @@ function saveOneRecept() {
   /* Eftersom vi kan komma åt fältet via dess namn - todoForm - och alla formulärets fält med dess namn - t.ex. title - kan vi använda detta för att sätta värden hos ett objekt. Alla input-fält har sitt innehåll lagrat i en egenskap vid namn value (som också används i validateField-funktionen, men där har egenskapen value "destrukturerats" till en egen variabel. ) */
   const oneRecept = {
     title: receptForm.title.value,
-    allergy: receptForm.allergy.value,
-
-    //completed: false
+    allergy: receptForm.allergy.value
   };
   /* Ett objekt finns nu som har egenskaper motsvarande hur vi vill att uppgiften ska sparas ner på servern, med tillhörande värden från formulärets fält. */
 
