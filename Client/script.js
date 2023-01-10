@@ -145,6 +145,7 @@ function saveOneRecept() {
   api.create(oneRecept).then((oneRecept) => {
     /* oneRecept kommer här vara innehållet i promiset. Om vi ska följa objektet hela vägen kommer vi behöva gå hela vägen till servern. Det är nämligen det som skickas med res.send i server/api.js, som api-klassens create-metod tar emot med then, översätter till JSON, översätter igen till ett JavaScript-objekt, och till sist returnerar som ett promise. Nu har äntligen det promiset fångats upp och dess innehåll - uppgiften från backend - finns tillgängligt och har fått namnet "oneRecept".  */
     if (oneRecept) {
+      console.log(oneRecept);
       /* När en kontroll har gjorts om oneRecept ens finns - dvs. att det som kom tillbaka från servern faktiskt var ett objekt kan vi anropa renderList(), som ansvarar för att uppdatera vår todo-lista. renderList kommer alltså att köras först när vi vet att det gått bra att spara ner den nya uppgiften.  */
       renderList();
     }
@@ -162,11 +163,13 @@ function renderList() {
 
     /* Här används todoListElement, en variabel som skapades högt upp i denna fil med koden const todoListElement = document.getElementById('todoList');
      */
+    console.log(allRecept);
 
     /* Först sätts dess HTML-innehåll till en tom sträng. Det betyder att alla befintliga element och all befintlig text inuti todoListElement tas bort. Det kan nämligen finnas list-element däri när denna kod körs, men de tas här bort för att hela listan ska uppdateras i sin helhet. */
     todoListElement.innerHTML = '';
     todoListElement.insertAdjacentHTML('beforeend', renderOneRecept
     (oneRecept));
+//loop och stoppa in koden. från rad 170 och 171. kolla i renderlist funktionen.
 
     /* De hämtade uppgifterna från servern via api:et getAll-funktion får heta allRecept, eftersom callbackfunktionen som skickades till then() har en parameter som är döpt så. Det är allRecept-parametern som är innehållet i promiset. */
 
