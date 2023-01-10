@@ -32,7 +32,7 @@ receptForm.allergy.addEventListener('blur', (event) => validateField(event.targe
 receptForm.addEventListener('submit', onSubmit);
 
 /* Här hämtas list-elementet upp ur HTML-koden. Alltså det element som vi ska skriva ut listelement innehållande varje enskild uppgift i. */
-const todoListElement = document.getElementById('receptList');
+const receptListElement = document.getElementById('receptList');
 /* Jag använder oftast getElementById, men andra sätt är att t.ex. använda querySelector och skicka in en css-selektor. I detta fall skulle man kunna skriva document.querySelector("#todoList"), eftersom # i css hittar specifika id:n. Ett annat sätt vore att använda elementet document.querySelector("ul"), men det är lite osäkert då det kan finnas flera ul-element på sidan. Det går också bra att hämta på klassnamn document.querySelector(".todoList") om det hade funnits ett element med sådan klass (det gör det inte). Klasser är inte unika så samma kan finnas hos flera olika element och om man vill hämta just flera element är det vanligt att söka efter dem via ett klassnamn. Det man behöver veta då är att querySelector endast kommer att innehålla ett enda element, även om det finns flera. Om man vill hitta flera element med en viss klass bör man istället använda querySelectorAll.  */
 
 /* Här anges startvärde för tre stycken variabler som ska användas vid validering av formulär. P.g.a. lite problem som bl.a. har med liveServer att göra, men också att formuläret inte rensas har dessa satts till true från början, även om det inte blir helt rätt. Dessa ska i alla fall tala om för applikationen om de olika fälten i formulären har fått godkänd input.  */
@@ -161,16 +161,13 @@ function renderList() {
   api.getAll().then((allRecept) => {
     /* När vi fått svaret från den asynkrona funktionen getAll, körs denna anonyma arrow-funktion som skickats till then() */
 
-    /* Här används todoListElement, en variabel som skapades högt upp i denna fil med koden const todoListElement = document.getElementById('todoList');
+    /* Här används receptListElement, en variabel som skapades högt upp i denna fil med koden const receptListElement = document.getElementById('todoList');
      */
     console.log(allRecept);
 
-    /* Först sätts dess HTML-innehåll till en tom sträng. Det betyder att alla befintliga element och all befintlig text inuti todoListElement tas bort. Det kan nämligen finnas list-element däri när denna kod körs, men de tas här bort för att hela listan ska uppdateras i sin helhet. */
-    todoListElement.innerHTML = '';
-    todoListElement.insertAdjacentHTML('beforeend', renderOneRecept
-    (oneRecept));
-//loop och stoppa in koden. från rad 170 och 171. kolla i renderlist funktionen.
-
+    /* Först sätts dess HTML-innehåll till en tom sträng. Det betyder att alla befintliga element och all befintlig text inuti receptListElement tas bort. Det kan nämligen finnas list-element däri när denna kod körs, men de tas här bort för att hela listan ska uppdateras i sin helhet. */
+    receptListElement.innerHTML = '';
+   
     /* De hämtade uppgifterna från servern via api:et getAll-funktion får heta allRecept, eftersom callbackfunktionen som skickades till then() har en parameter som är döpt så. Det är allRecept-parametern som är innehållet i promiset. */
 
 
@@ -178,29 +175,32 @@ function renderList() {
     // behöcvs denanstående kod?
 
     /* Koll om det finns någonting i allRecept och om det är en array med längd större än 0 */
-    // if (allRecept && allRecept.length > 0) {
+     if (allRecept && allRecept.length > 0) {
       /* Om allRecept är en lista som har längd större än 0 loopas den igenom med forEach. forEach tar, likt then, en callbackfunktion. Callbackfunktionen tar emot namnet på varje enskilt element i arrayen, som i detta fall är ett objekt innehållande en uppgift.  */
       //sortByDate(allRecept);
-      //allRecept.forEach((oneRecept) => {
+      allRecept.forEach((oneRecept) => {
         /* Om vi bryter ned nedanstående rad får vi något i stil med:
-        1. todoListElement: ul där alla uppgifter ska finnas
+        1. receptListElement: ul där alla uppgifter ska finnas
         2. insertAdjacentHTML: DOM-metod som gör att HTML kan läggas till inuti ett element på en given position
-        3. "beforeend": positionen där man vill lägga HTML-koden, i detta fall i slutet av todoListElement, alltså längst ned i listan. 
+        3. "beforeend": positionen där man vill lägga HTML-koden, i detta fall i slutet av receptListElement, alltså längst ned i listan. 
         4. renderOneRecept(oneRecept) - funktion som returnerar HTML. 
         5. oneRecept (objekt som representerar en uppgift som finns i arrayen) skickas in till renderOneRecept, för att renderOneRecept ska kunna skapa HTML utifrån egenskaper hos uppgifts-objektet. 
         */
 
         /* Denna kod körs alltså en gång per element i arrayen allRecept, dvs. en  gång för varje uppgiftsobjekt i listan. */
-        //todoListElement.insertAdjacentHTML('beforeend', renderOneRecept(oneRecept));
-      //});
-    //}
+        receptListElement.insertAdjacentHTML('beforeend', renderOneRecept(oneRecept));
+      });
+    }
   });
 }
+
+
+//loop och stoppa in koden. från rad 170 och 171. kolla i renderlist funktionen.
 
 /* render oneRecept är en funktion som returnerar HTML baserat på egenskaper i ett uppgiftsobjekt. 
 Endast en uppgift åt gången kommer att skickas in här, eftersom den anropas inuti en forEach-loop, där uppgifterna loopas igenom i tur och ordning.  */
 
-/* Destructuring används för att endast plocka ut vissa egenskaper hos uppgifts-objektet. Det hade kunnat stå function renderOneRecept(oneRecept) {...} här - för det är en hel oneRecept som skickas in - men då hade man behövt skriva oneRecept.id, oneRecept.title osv. på alla ställen där man ville använda dem. Ett trick är alltså att "bryta ut" dessa egenskaper direkt i funktionsdeklarationen istället. Så en hel oneRecept skickas in när funktionen anropas uppe i todoListElement.insertAdjacentHTML("beforeend", renderOneRecept(oneRecept)), men endast vissa egenskaper ur det oneRecept-objektet tas emot här i funktionsdeklarationen. */
+/* Destructuring används för att endast plocka ut vissa egenskaper hos uppgifts-objektet. Det hade kunnat stå function renderOneRecept(oneRecept) {...} här - för det är en hel oneRecept som skickas in - men då hade man behövt skriva oneRecept.id, oneRecept.title osv. på alla ställen där man ville använda dem. Ett trick är alltså att "bryta ut" dessa egenskaper direkt i funktionsdeklarationen istället. Så en hel oneRecept skickas in när funktionen anropas uppe i receptListElement.insertAdjacentHTML("beforeend", renderOneRecept(oneRecept)), men endast vissa egenskaper ur det oneRecept-objektet tas emot här i funktionsdeklarationen. */
 function renderOneRecept({ id, title, allergy}) {
   /* Baserat på inskickade egenskaper hos oneRecept-objektet skapas HTML-kod med styling med hjälp av tailwind-klasser. Detta görs inuti en templatestring  (inom`` för att man ska kunna använda variabler inuti. Dessa skrivs inom ${}) */
 
@@ -211,10 +211,9 @@ function renderOneRecept({ id, title, allergy}) {
   /* Lite kort om vad HTML-koden innehåller. Det mesta är bara struktur och Tailwind-styling enligt eget tycke och smak. Värd att nämna extra är dock knappen, <button>-elementet, en bit ned. Där finns ett onclick-attribut som kopplar en eventlyssnare till klickeventet. Eventlyssnaren här heter onDelete och den får med sig egenskapen id, som vi fått med oss från oneRecept-objektet. Notera här att det går bra att sätta parenteser och skicka in id på detta viset här, men man fick inte sätta parenteser på eventlyssnare när de kopplades med addEventListener (som för formulärfälten högre upp i koden). En stor del av föreläsning 3 rörande funktioner och event förklarar varför man inte får sätta parenteser på callbackfunktioner i JavaScriptkod. 
   
   När eventlyssnaren kopplas till knappen här nedanför, görs det däremot i HTML-kod och inte JavaScript. Man sätter ett HTML-attribut och refererar till eventlyssnarfunktionen istället. Då fungerar det annorlunda och parenteser är tillåtna. */
- 
+    /* <li class="select-none mt-2 py-2 border-b border-pink-300 ${oneReceptColor}">*/
 
   let html = `
-    <li class="select-none mt-2 py-2 border-b border-pink-300 ${oneReceptColor}">
       <div class="flex items-center">
       <h3 class="mb-3 flex-1 text-xl font-bold uppercase">${title}</h3>
         <div>
@@ -236,7 +235,7 @@ function renderOneRecept({ id, title, allergy}) {
   html += `
     </li>`;
 
-  /* html-variabeln returneras ur funktionen och kommer att vara den som sätts som andra argument i todoListElement.insertAdjacentHTML("beforeend", renderOneRecept(oneRecept)) */
+  /* html-variabeln returneras ur funktionen och kommer att vara den som sätts som andra argument i receptListElement.insertAdjacentHTML("beforeend", renderOneRecept(oneRecept)) */
   return html;
 }
 
