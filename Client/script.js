@@ -21,17 +21,12 @@ receptForm.title.addEventListener('blur', (event) => validateField(event.target)
 receptForm.allergy.addEventListener('input', (event) => validateField(event.target));
 receptForm.allergy.addEventListener('blur', (event) => validateField(event.target));
 
-/* I dueDate måste man fånga upp input, då man kan förändra fältet genom att välja datum i en datumväljare, och således aldrig faktiskt skriva i fältet.  */
-// receptForm.dueDate.addEventListener('input', (event) => validateField(event.target));
-// receptForm.dueDate.addEventListener('blur', (event) => validateField(event.target));
 
-/* Formuläret har eventtypen"submit", som triggas när någon trycker på en knapp av typen "submit". Som denna: 
-<button name="submitTodoForm" class="rounded-md bg-yellow-500 hover:bg-yellow-400 px-4 py-1" type="submit"> */
-
-/* Så istället för att lyssna efter "click"-event hos knappen, lyssnar man istället efter formulärets "submit"-event som kan triggas av just denna knapp just för att den har typen submit. */
+/* Formuläret nedan har eventtypen"submit", som triggas när någon trycker på en knapp av typen "submit". 
+Istället för att lyssna efter "click"-event hos knappen, lyssnar man  efter formulärets "submit"-event som kan triggas av knappen "spara" för att då den är av typen (taggen) submit. */
 receptForm.addEventListener('submit', onSubmit);
 
-/* Här hämtas list-elementet upp ur HTML-koden. Alltså det element som vi ska skriva ut listelement innehållande varje enskild uppgift i. */
+/* Här hämtas list-elementet upp ur HTML-koden. Alltså det element som vi ska skriva ut listelement innehållande varje enskillt recept i. */
 const receptListElement = document.getElementById('receptList');
 /* Jag använder oftast getElementById, men andra sätt är att t.ex. använda querySelector och skicka in en css-selektor. I detta fall skulle man kunna skriva document.querySelector("#todoList"), eftersom # i css hittar specifika id:n. Ett annat sätt vore att använda elementet document.querySelector("ul"), men det är lite osäkert då det kan finnas flera ul-element på sidan. Det går också bra att hämta på klassnamn document.querySelector(".todoList") om det hade funnits ett element med sådan klass (det gör det inte). Klasser är inte unika så samma kan finnas hos flera olika element och om man vill hämta just flera element är det vanligt att söka efter dem via ett klassnamn. Det man behöver veta då är att querySelector endast kommer att innehålla ett enda element, även om det finns flera. Om man vill hitta flera element med en viss klass bör man istället använda querySelectorAll.  */
 
@@ -118,7 +113,7 @@ function onSubmit(event) {
     /* Log för att se om man kommit förbi valideringen */
     console.log('Submit');
 
-    /* Anrop till funktion som har hand om att skicka uppgift till api:et */
+    /* Anrop till funktion som har hand om att skicka recept till api:et */
     saveOneRecept();
   }
 }
@@ -131,7 +126,7 @@ function saveOneRecept() {
     title: receptForm.title.value,
     allergy: receptForm.allergy.value
   };
-  /* Ett objekt finns nu som har egenskaper motsvarande hur vi vill att uppgiften ska sparas ner på servern, med tillhörande värden från formulärets fält. */
+  /* Ett objekt finns nu som har egenskaper motsvarande hur vi vill att recepten ska sparas ner på servern, med tillhörande värden från formulärets fält. */
 
   /* Api-objektet, d.v.s. det vi instansierade utifrån vår egen klass genom att skriva const api = new Api("http://localhost:5000/allRecept); en bit upp i koden.*/
 
@@ -143,10 +138,10 @@ function saveOneRecept() {
   */
 
   api.create(oneRecept).then((oneRecept) => {
-    /* oneRecept kommer här vara innehållet i promiset. Om vi ska följa objektet hela vägen kommer vi behöva gå hela vägen till servern. Det är nämligen det som skickas med res.send i server/api.js, som api-klassens create-metod tar emot med then, översätter till JSON, översätter igen till ett JavaScript-objekt, och till sist returnerar som ett promise. Nu har äntligen det promiset fångats upp och dess innehåll - uppgiften från backend - finns tillgängligt och har fått namnet "oneRecept".  */
+    /* oneRecept kommer här vara innehållet i promiset. Om vi ska följa objektet hela vägen kommer vi behöva gå hela vägen till servern. Det är nämligen det som skickas med res.send i server/api.js, som api-klassens create-metod tar emot med then, översätter till JSON, översätter igen till ett JavaScript-objekt, och till sist returnerar som ett promise. Nu har äntligen det promiset fångats upp och dess innehåll - receptet från backend - finns tillgängligt och har fått namnet "oneRecept".  */
     if (oneRecept) {
       console.log(oneRecept);
-      /* När en kontroll har gjorts om oneRecept ens finns - dvs. att det som kom tillbaka från servern faktiskt var ett objekt kan vi anropa renderList(), som ansvarar för att uppdatera vår todo-lista. renderList kommer alltså att köras först när vi vet att det gått bra att spara ner den nya uppgiften.  */
+      /* När en kontroll har gjorts om oneRecept ens finns - dvs. att det som kom tillbaka från servern faktiskt var ett objekt kan vi anropa renderList(), som ansvarar för att uppdatera vår todo-lista. renderList kommer alltså att köras först när vi vet att det gått bra att spara ner den nya recepten.  */
       renderList();
     }
   });
@@ -168,26 +163,22 @@ function renderList() {
     /* Först sätts dess HTML-innehåll till en tom sträng. Det betyder att alla befintliga element och all befintlig text inuti receptListElement tas bort. Det kan nämligen finnas list-element däri när denna kod körs, men de tas här bort för att hela listan ska uppdateras i sin helhet. */
     receptListElement.innerHTML = '';
    
-    /* De hämtade uppgifterna från servern via api:et getAll-funktion får heta allRecept, eftersom callbackfunktionen som skickades till then() har en parameter som är döpt så. Det är allRecept-parametern som är innehållet i promiset. */
-
-
-
-    // behöcvs denanstående kod?
+    /* De hämtade recepten från servern via api:et getAll-funktion får heta allRecept, eftersom callbackfunktionen som skickades till then() har en parameter som är döpt så. Det är allRecept-parametern som är innehållet i promiset. */
 
     /* Koll om det finns någonting i allRecept och om det är en array med längd större än 0 */
      if (allRecept && allRecept.length > 0) {
-      /* Om allRecept är en lista som har längd större än 0 loopas den igenom med forEach. forEach tar, likt then, en callbackfunktion. Callbackfunktionen tar emot namnet på varje enskilt element i arrayen, som i detta fall är ett objekt innehållande en uppgift.  */
+      /* Om allRecept är en lista som har längd större än 0 loopas den igenom med forEach. forEach tar, likt then, en callbackfunktion. Callbackfunktionen tar emot namnet på varje enskilt element i arrayen, som i detta fall är ett objekt innehållande ett recept.  */
       //sortByDate(allRecept);
       allRecept.forEach((oneRecept) => {
         /* Om vi bryter ned nedanstående rad får vi något i stil med:
-        1. receptListElement: ul där alla uppgifter ska finnas
+        1. receptListElement: ul där alla recept ska finnas
         2. insertAdjacentHTML: DOM-metod som gör att HTML kan läggas till inuti ett element på en given position
         3. "beforeend": positionen där man vill lägga HTML-koden, i detta fall i slutet av receptListElement, alltså längst ned i listan. 
         4. renderOneRecept(oneRecept) - funktion som returnerar HTML. 
-        5. oneRecept (objekt som representerar en uppgift som finns i arrayen) skickas in till renderOneRecept, för att renderOneRecept ska kunna skapa HTML utifrån egenskaper hos uppgifts-objektet. 
+        5. oneRecept (objekt som representerar ett recept som finns i arrayen) skickas in till renderOneRecept, för att renderOneRecept ska kunna skapa HTML utifrån egenskaper hos recept-objektet. 
         */
 
-        /* Denna kod körs alltså en gång per element i arrayen allRecept, dvs. en  gång för varje uppgiftsobjekt i listan. */
+        /* Denna kod körs alltså en gång per element i arrayen allRecept, dvs. en  gång för varje receptobjekt i listan. */
         receptListElement.insertAdjacentHTML('beforeend', renderOneRecept(oneRecept));
       });
     }
@@ -197,10 +188,10 @@ function renderList() {
 
 //loop och stoppa in koden. från rad 170 och 171. kolla i renderlist funktionen.
 
-/* render oneRecept är en funktion som returnerar HTML baserat på egenskaper i ett uppgiftsobjekt. 
-Endast en uppgift åt gången kommer att skickas in här, eftersom den anropas inuti en forEach-loop, där uppgifterna loopas igenom i tur och ordning.  */
+/* render oneRecept är en funktion som returnerar HTML baserat på egenskaper i ett receptobjekt. 
+Endast ett recept åt gången kommer att skickas in här, eftersom den anropas inuti en forEach-loop, där alla recept loopas igenom i tur och ordning.  */
 
-/* Destructuring används för att endast plocka ut vissa egenskaper hos uppgifts-objektet. Det hade kunnat stå function renderOneRecept(oneRecept) {...} här - för det är en hel oneRecept som skickas in - men då hade man behövt skriva oneRecept.id, oneRecept.title osv. på alla ställen där man ville använda dem. Ett trick är alltså att "bryta ut" dessa egenskaper direkt i funktionsdeklarationen istället. Så en hel oneRecept skickas in när funktionen anropas uppe i receptListElement.insertAdjacentHTML("beforeend", renderOneRecept(oneRecept)), men endast vissa egenskaper ur det oneRecept-objektet tas emot här i funktionsdeklarationen. */
+/* Destructuring används för att endast plocka ut vissa egenskaper hos receptens-objektet. Det hade kunnat stå function renderOneRecept(oneRecept) {...} här - för det är en hel oneRecept som skickas in - men då hade man behövt skriva oneRecept.id, oneRecept.title osv. på alla ställen där man ville använda dem. Ett trick är alltså att "bryta ut" dessa egenskaper direkt i funktionsdeklarationen istället. Så en hel oneRecept skickas in när funktionen anropas uppe i receptListElement.insertAdjacentHTML("beforeend", renderOneRecept(oneRecept)), men endast vissa egenskaper ur det oneRecept-objektet tas emot här i funktionsdeklarationen. */
 function renderOneRecept({ id, title, allergy}) {
   /* Baserat på inskickade egenskaper hos oneRecept-objektet skapas HTML-kod med styling med hjälp av tailwind-klasser. Detta görs inuti en templatestring  (inom`` för att man ska kunna använda variabler inuti. Dessa skrivs inom ${}) */
 
@@ -239,13 +230,13 @@ function renderOneRecept({ id, title, allergy}) {
   return html;
 }
 
-/* Funktion för att ta bort uppgift. Denna funktion är kopplad som eventlyssnare i HTML-koden som genereras i renderOneRecept */
+/* Funktion för att ta bort ett recept. Denna funktion är kopplad som eventlyssnare i HTML-koden som genereras i renderOneRecept */
 function deleteOneRecept(id) {
-  /* Det id som skickas med till deleteOneRecept är taget från respektive uppgift. Eftersom renderOneRecept körs en gång för varje uppgift, och varje gång innehåller en unik egenskap och dess uppgifter, kommer också ett unikt id vara kopplat till respektive uppgift i HTML-listan. Det är det id:t som skickas in hit till deleteallRecept. */
+  /* Det id som skickas med till deleteOneRecept är taget från respektive recept. Eftersom renderOneRecept körs en gång för varje recept, och varje gång innehåller en unik egenskap (alergi) samt recept, kommer också ett unikt id vara kopplat till respektive recept i HTML-listan. Det är det id:t som skickas in hit till deleteallRecept. */
 
   /* Api-klassen har en metod, remove, som sköter DELETE-anrop mot vårt egna backend */
   api.remove(id).then((result) => {
-    /* När REMOVE-förfrågan är skickad till backend via vår Api-klass och ett svar från servern har kommit, kan vi på nytt anropa renderList för att uppdatera listan. Detta är alltså samma förfarande som när man skapat en ny uppgift - när servern är färdig uppdateras listan så att aktuell information visas. */
+    /* När REMOVE-förfrågan är skickad till backend via vår Api-klass och ett svar från servern har kommit, kan vi på nytt anropa renderList för att uppdatera listan. Detta är alltså samma förfarande som när man skapat ett nytt recept - när servern är färdig uppdateras listan så att aktuell information visas. */
 
     renderList();
     /* Notera att parametern result används aldrig i denna funktion. Vi skickar inte tillbaka någon data från servern vid DELETE-förfrågningar, men denna funktion körs när hela anropet är färdigt så det är fortfarande ett bra ställe att rendera om listan, eftersom vi här i callbackfunktionen till then() vet att den asynkrona funktionen remove har körts färdigt. */

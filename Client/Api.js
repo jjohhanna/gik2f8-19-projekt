@@ -17,7 +17,7 @@ class Api {
   Create = POSTs
   */
   create(data) {
-    /* Konverterar inskickat JavaScriptobjekt, i detta fall är det en uppgift, till en sträng så att den kan skickas över HTTP. */
+    /* Konverterar inskickat JavaScriptobjekt, i detta fall är det ett recept, till en sträng så att den kan skickas över HTTP. */
     const JSONData = JSON.stringify(data);
     /* Utskrift till logg för att se vad som ska skickas och vart det ska skickas */
     //console.log(`Sending ${JSONData} to ${this.url}`);
@@ -84,7 +84,7 @@ class Api {
       ha ändrats till till 
         res.header('Access-Control-Allow-Methods', '*'); (Method->Methods, alltså)  */
 
-    /* Log för att se att rätt uppgift är på väg att tas bort */
+    /* Log för att se att rätt recept är på väg att tas bort */
     console.log(`Removing task with id ${id}`);
 
     /* Här behövs, precis som vid POST, lite mer inställningar. Fetch behöver dock inte heller här ett requestobjekt. Det går bra att skicka de sakerna som man skulle ha skickat till requestobjektets konstruktor direkt till fetch-funktionen. 
