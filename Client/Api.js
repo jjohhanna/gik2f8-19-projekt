@@ -12,10 +12,8 @@ class Api {
     this.url = url;
   }
 
-  /* Metod för att hatera att skapa resurser (Create i CRUD). Motsvarar ett anrop med metoden POST.   
-  
-  Create = POSTs
-  */
+  // Metod "create" hanterar skapande av resurser, POST-förfrågan. 
+ 
   create(data) {
     /* Konverterar inskickat JavaScriptobjekt, i detta fall är det ett recept, till en sträng så att den kan skickas över HTTP. */
     const JSONData = JSON.stringify(data);
@@ -65,6 +63,7 @@ class Api {
     );
   }
 
+   // Metod "getAll" läser fil. 
   /* Read - GET */
   getAll() {
     /* I detta fetch-anrop behövs inga särskilda inställningar. Fetch kan ta bara url:en som parameter också, istället för att man skapar ett helt request-objekt och skickar in det. */
@@ -76,7 +75,11 @@ class Api {
       .catch((err) => console.log(err));
   }
 
-  /* Delete = DELETE. Här heter dock metoden som hanterar DELETE-förfrågan "remove". delete får inte användas som metod- funktions- eller variabelnamn i JavaScript, då det är ett ord reserverat av JavaScript-språket självt.  */
+
+
+
+
+  // Metod "remove" hanterar DELETE-förfrågan. 
   remove(id) {
     /*  Innan ni går vidare med remove, så måste ni se till att server-koden från L5 har en sak från L5 fixad: 
       I server/app.js ska  
@@ -86,6 +89,7 @@ class Api {
 
     /* Log för att se att rätt recept är på väg att tas bort */
     console.log(`Removing task with id ${id}`);
+
 
     /* Här behövs, precis som vid POST, lite mer inställningar. Fetch behöver dock inte heller här ett requestobjekt. Det går bra att skicka de sakerna som man skulle ha skickat till requestobjektets konstruktor direkt till fetch-funktionen. 
 
