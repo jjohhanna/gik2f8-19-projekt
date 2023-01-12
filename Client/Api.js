@@ -38,7 +38,7 @@ class Api {
       
     */
 
-      /* sicka med body som är ett objekt översatt till json, 
+      /* skicka med body som är ett objekt översatt till json, 
      objektet ska innehålla egenskapen completed med värde true eller false
   */
 

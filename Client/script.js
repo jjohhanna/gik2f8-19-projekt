@@ -60,10 +60,10 @@ function validateField(field) {
     /* Fallet om någon skrev i eller lämnade fältet med name "title" */
     case 'title': {
       /* Då görs en enkel validering på om värdet i title-fältet är kortare än 2 */
-      if (value.length < 3) {
+      if (value.length < 2) {
         /* Om det inte är tre tecken långt kommer man in i denna if-sats och titleValid variabeln sätts till false, validationMessage sätts till ett lämpligt meddelande som förklarar vad som är fel.  */
         titleValid = false;
-        validationMessage = "Fältet 'Titel' måste innehålla minst 3 tecken.";
+        validationMessage = "Fältet 'Titel' måste innehålla minst 2 tecken.";
       } else if (value.length > 60) {
         /* Validering görs också för att kontrollera att texten i fältet inte har fler än 60 tecken. */
         titleValid = false;

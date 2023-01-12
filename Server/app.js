@@ -30,7 +30,6 @@ app
 /* .get tar emot
   1. En route, som utgör en del av adressen/URL:en dit man kan skicka förfrågan. Man anger det som ska stå efter domän och port (vår server är konfigurerar som default att köra på localhost:5000), så här metod lyssnar man alltså efter GET-anrop till url:en localhost:5000/oneRecept
   
-  Notera att route-namnen döps om i lektion 6. De ska heta allRecept, inte oneRecept, men felet är enligt videorna inte tillrättat i detta skede, så jag lämnar kvar det. 
 
   2. En callbackfunktion som kommer att köras när en sådan förfrågan görs. Callbackfunktionen tar (minst) två parametrar - ett requestobjekt och ett responseobjekt, som här kallas req och res. Callbackfunktionen är asynkron för att vi använder await inuti. */
 app.get('/allRecept', async (req, res) => {
