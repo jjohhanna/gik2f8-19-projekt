@@ -82,6 +82,9 @@ app.post('/allRecept', async (req, res) => {
     res.status(500).send({ error: error.stack });
   }
 });
+
+
+
 /* Express metod för att lyssna efter DELETE-anrop heter naturligt delete(). I övrigt fungerar den likadant som get och post */
 
 /* Route-adressen som specificeras i delete har /:id i tillägg till adressen. Det betyder att man i adressen kan skriva oneRecept följt av ett / och sedan något som kommer att sparas i en egenskap vid namn id. :id betyder att det som står efter / kommer att heta id i requestobjektet. Hade kunnat vara vad som helst. Så här möjliggörs att lyssna efter DELETE-anrop på exempelvis url:en localhost:5000/oneRecept/1 där 1 då skulle motsvara ett id på den uppgift man vill ta bort */

@@ -202,7 +202,6 @@ function renderOneRecept({ id, title, allergy}) {
   /* Lite kort om vad HTML-koden innehåller. Det mesta är bara struktur och Tailwind-styling enligt eget tycke och smak. Värd att nämna extra är dock knappen, <button>-elementet, en bit ned. Där finns ett onclick-attribut som kopplar en eventlyssnare till klickeventet. Eventlyssnaren här heter onDelete och den får med sig egenskapen id, som vi fått med oss från oneRecept-objektet. Notera här att det går bra att sätta parenteser och skicka in id på detta viset här, men man fick inte sätta parenteser på eventlyssnare när de kopplades med addEventListener (som för formulärfälten högre upp i koden). En stor del av föreläsning 3 rörande funktioner och event förklarar varför man inte får sätta parenteser på callbackfunktioner i JavaScriptkod. 
   
   När eventlyssnaren kopplas till knappen här nedanför, görs det däremot i HTML-kod och inte JavaScript. Man sätter ett HTML-attribut och refererar till eventlyssnarfunktionen istället. Då fungerar det annorlunda och parenteser är tillåtna. */
-    /* <li class="select-none mt-2 py-2 border-b border-pink-300 ${oneReceptColor}">*/
 
   let html = `
       <div class="flex items-center">
@@ -236,11 +235,12 @@ function deleteOneRecept(id) {
 
   /* Api-klassen har en metod, remove, som sköter DELETE-anrop mot vårt egna backend */
   api.remove(id).then((result) => {
-    /* När REMOVE-förfrågan är skickad till backend via vår Api-klass och ett svar från servern har kommit, kan vi på nytt anropa renderList för att uppdatera listan. Detta är alltså samma förfarande som när man skapat ett nytt recept - när servern är färdig uppdateras listan så att aktuell information visas. */
+    /* När REMOVE-förfrågan är skickad till backend via vår Api-klass och när ett svar från servern har kommit, kan vi på nytt anropa renderList för att uppdatera listan i webfönstret. Detta är alltså samma förfarande som när man skapat ett nytt recept - när servern är färdig uppdateras listan så att aktuell information visas. */
 
     renderList();
     /* Notera att parametern result används aldrig i denna funktion. Vi skickar inte tillbaka någon data från servern vid DELETE-förfrågningar, men denna funktion körs när hela anropet är färdigt så det är fortfarande ett bra ställe att rendera om listan, eftersom vi här i callbackfunktionen till then() vet att den asynkrona funktionen remove har körts färdigt. */
   });
+
 }
 
 
