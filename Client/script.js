@@ -205,9 +205,9 @@ function renderOneRecept({ id, title, allergy}) {
 
   let html = `
       <div class="flex items-center">
-      <h3 class="mb-3 flex-1 text-xl font-bold uppercase">${title}</h3>
+      <h3 class="flex-1 text-xl font-bold uppercase">${title}</h3>
         <div>
-          <button onclick="deleteOneRecept(${id})" class="inline-block bg-violet-300 text-xs text-violet-700 border border-pink px-3 py-1 rounded-md ml-2">Ta bort</button>
+          <button onclick="deleteOneRecept(${id})" class="inline-block bg-violet-300 text-xs text-violet-700 border border-pink px-3 py-1 rounded-full ml-2 hover:bg-pink-300 hover:text-white px-4 py-1">Ta bort</button>
         </div>
       </div>`;
 
@@ -218,7 +218,7 @@ function renderOneRecept({ id, title, allergy}) {
 
     /* Det som ska göras om dallergy finns är att html-variabeln ska byggas på med HTML-kod som visar det som finns i allergy-egenskapen hos oneRecept-objektet. */
     (html += `
-      <p class="ml-8 mt-2 text-xs italic">${allergy}</p>
+      <p class="ml-5 mb-5 text-xs italic">${allergy}</p> 
   `);
 
   /* När html-strängen eventuellt har byggts på med HTML-kod för allergy-egenskapen läggs till sist en sträng motsvarande sluttaggen för <li>-elementet dit. */
